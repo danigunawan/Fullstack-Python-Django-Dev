@@ -1,0 +1,5 @@
+1. ketik python di terminal
+2. Print ("hello World")
+3. Print (2+1)
+4. quit() //untuk keluar dari argumen python
+5. cls // membersihkan layar

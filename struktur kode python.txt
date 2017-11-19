@@ -1,0 +1,51 @@
+https://jinbaskom.wordpress.com/2015/05/10/apa-itu-fungsi-repr-di-python/
+https://www.codepolitan.com/membuat-class-di-python-589528b4d558d
+
+https://stackoverflow.com/questions/6930144/underscore-vs-double-underscore-with-variables-and-methods
+
+class Product:
+	__vendor_message = "Ini adalah rahasia"
+	name = ""
+	price = ""
+	size = ""
+	unit = ""
+
+	def __init__(self, name):
+		print "Ini adalah constructor"
+		self.name = name
+		self.unit = "ml"
+		self.size = 250
+
+	def get_vendor_message(self):
+		print self.__vendor_message
+
+	def set_price(self, price):
+		self.price = price
+
+####### PENJELASAN
+
+__INIT__ = constructor method bawaan python, Kemudian untuk constructor kita gunakan method bawaan Python yang bernama init
+atribut atau properties private gunakan (__) underscore contoh __buah_manis
+self = Setiap method harus memiliki parameter self yang artinya method tersebut dimiliki dan terdaftar ke class tersebut untuk membedakan dari method atau fungsi yang ada di luar class
+
+	
+
+DETAIL
+====================
+Class adalah salah satu cara bagaimana kita membuat sebuah kode yang mempunyai behaviour tertentu dan lebih mudah dalam mengorganisasi berbagai fungsi dan state-nya. Dalam sebuah class kamu dapat menyimpan sebuah state tanpa harus membuat banyak state bila tidak menggunakan class.
+
+Dalam hal ini, kita dapat membuat sebuah objek yang memiliki variable dan method-nya sendiri. Dan setiap objek yang dihasilkan akan memiliki karakteristik yang berbeda dibandingkan objek lainnya. Dalam sebuah objek tentu ada variabel yang dapat diakses secara langsung (s) ataupun dirahasiakan (private). Dalam contoh ini kamu akan membuat sebuah class Product dan membuat dua objek dengan atribut yang berbeda dari class tersebut.
+
+
+Pertama kita gunakan keyword class diikuti dengan nama class yang kita inginkan. Lebih baik kamu gunakan kata yang diawali huruf kapital. Kemudian kita tentukan atribut apa saja yang dimiliki oleh class. Disana ada vendor_message, name, price, size, dan unit.
+
+Untuk atribut yang bersifat privat, kamu dapat menggunakan underscore ( _ ) dua kali di awal nama variabel untuk membuatnya privat. Sedangkan untuk atribut publik cukup dengan nama yang diawali huruf alfabet.
+
+Kemudian untuk constructor kita gunakan method bawaan Python yang bernama init . Setiap method harus memiliki parameter self yang artinya method tersebut dimiliki dan terdaftar ke class tersebut untuk membedakan dari method atau fungsi yang ada di luar class. Selanjutnya constructor dapat memiliki atribut tambahan sesuai kebutuhan. Dalam hal ini, constructor Product memiliki parameter name yang harus selalu diisi saat membuat objek. Di dalam constructor terdapat inisialisasi atribut untuk name, unit, dan size.
+
+Kmeudian untuk mengambil suatu atribut yang bersifat privat, kita harus membuat sebuah method yang membantu kita mengambil atribut privat tersebut. Dalam hal ini kita ambil vendor_message dengan menggunakan method get_vendor_message(). Kemudian kita juga dapat membuat method lain untuk melakukan aksi tertentu. Misal kita membuat method set_price() untuk mengisi atribut price.
+
+
+Di bagian berikutnya, kita buat dua buah objek yang berbeda dengan menggunakan class Product.
+
+Untuk membuat sebuah objek di Python, kamu tidak perlu menggunakan statement new seperti di Java atau PHP. Layaknya memanggil sebuah method, kamu tinggal membuat objek dengan memanggil nama class yang telah dibuat, dan mengisi constructor sesuai dengan parameter yang dibutuhkan. Untuk mengambil atribut publik, kamu cukup menggunakan dot atau titik setelah nama objek dan memanggil atributnya. Pada kode diatas, bagian saat memanggil langsung atribut privat dikomentari terlebih dahulu. Bila kita hapus komentarnya dan skrip dijalankan ulang, maka akan muncul error seperti berikut:

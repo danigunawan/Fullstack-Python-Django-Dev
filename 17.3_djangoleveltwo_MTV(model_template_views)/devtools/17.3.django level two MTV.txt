@@ -1,0 +1,87 @@
+#KET : menggunakan project sebelumnya 17.2 populated dummy
+
+
+1. buka 17.3_djangoleveltwo_MTV(model_template_views)\My_Django_Stuff\first_project\first_app\views.py
+2. kita import :
+
+from first_app.models import Topic,Webpage,AccessRecord
+
+jadi dari :
+
+from django.shortcuts import render
+from django.http import HttpResponse
+
+menjadi :
+
+from django.shortcuts import render
+from django.http import HttpResponse
+from first_app.models import Topic,Webpage,AccessRecord
+
+3. pada method atau define index tambahkan / ubah:
+
+dari :
+
+def index(request):
+  # return HttpResponse("Hello World")
+  my_dict = {'insert_me': "Hello ini dari first_app/index.html!"}
+  # return render(request, 'index.html', context=my_dict) # request karena sifatnya req, index.html itu berada di folder template, context ini mempasing data dari variable my_dict nanti di tampilkan pada index.html yakni{insert_me}
+  return render(request, 'first_app\index.html', context=my_dict) # request karena sifatnya req, index.html itu berada di folder template/first_app, context ini mempasing data dari variable my_dict nanti di tampilkan pada index.html yakni{insert_me}
+
+menjadi : 
+
+
+def index(request):
+  webpages_list = AccessRecord.objects.order_by('date')
+  date_dict = {'access_records':webpages_list}
+  return render(request, 'first_app\index.html', context=date_dict) # request karena sifatnya req, index.html itu berada di folder template/first_app, context ini mempasing data dari variable my_dict nanti di tampilkan pada index.html yakni{insert_me}
+
+
+4. buka 17.3_djangoleveltwo_MTV(model_template_views)\My_Django_Stuff\first_project\templates\first_app\index.html
+dan ubah index.html menjadi : 
+
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Django Level Two</title>
+	<link rel="stylesheet" href="{% static "css/mystyle.css" %}"/>
+</head>
+<body>
+	<h1>Hi welcome to django level two</h1>
+	<h2>Here are youre acess records :</h2>
+
+	<div class="djangotwo">
+		{% if access_records %}
+		<table>
+			<thead>
+				<th>Site name</th>
+				<th>Date Accessed</th>
+			</thead>
+
+
+			{% for acc in access_records %}
+			<tr>
+				<td>{{ acc.name }}</td>
+				<td>{{ acc.date }}</td>
+			</tr>
+			{% endfor %}
+		</table>
+		{% else %}
+		<p>NO ACCESS RECORDS FOUND!</p>
+		{% endif %}		
+	</div>
+
+</body>
+</html>
+
+
+
+# jgn lupa buat mystyle.css pada folder static/css/mystyle.css dengan isi :
+
+h1{
+	color:red;
+}
+
+5.lalu python manage.py runserver

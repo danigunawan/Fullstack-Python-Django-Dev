@@ -1,0 +1,322 @@
+1. install anaconda/miniconda
+download miniconda atau anaconde exe
+
+2. install environment untuk django dengan :
+environment ini berguna untuk pemakaian resource python versi berapa yang akan dipakai baik dengan packagenya
+
+conda create --name myDjangoEnv django //django foldernya beserta kita install environment nya baik baik spec python dsb yang terbaru/ latest
+
+jika kita ingin spesifik install versinya :
+
+conda create --name myDjangoEnv python=3.5//spesifik install package environmentnya python v 3.5
+
+3. kita memilih environment mana yang mau diaktifkan atau tidak :
+
+yang sudah kita buat tadi environmentnya adalah myDjangoEnv :
+
+maka untuk aktivasi environmentnya :
+
+activate myDjangoEnv
+
+untuk deaktivasi :
+
+deactivate myDjangoEnv 
+
+4. conda info --envs # untuk melihat list environment yang bisa digunakan spesifikasinya
+dengan info --envs kita bisa memilih environment yang kita install packagenya :
+
+contoh : 
+
+MyDjangoEnv
+root 
+
+
+lalu kita bisa aktivasi :
+
+activate myDjangoEnv
+
+5. install dependency django :
+conda install django
+
+atau bisa dengan python dist
+
+pip install django
+
+6. cek python pastikan bisa masuk : 
+python
+
+7. keluar python:
+quit()
+
+8. buat folder djangotest
+
+9. cd ke djangotest
+
+10. lalu pilih environment spesifikasi python yang sudah diinstall :
+conda info --envs
+activate MyDjangoEnv #MyDjangoEnv nama env nya
+
+11.mulai project django :
+django-admin startproject first_project
+
+12. cd ke first_project lalu jalankan server : 
+python manage.py runserver
+
+13. kita sudah install core django tadi pada step sebelumnya sekarang 
+kita akan buat simple aplikasi untuk web dengan nama first_project, jadi syarat untuk buat aplikasi web kita butuh
+core python dan projectnya, kita buat project ketik :
+
+python manage.py startapp first_app
+
+buka folder project anda pasti ada folder first_app
+
+14. penjelasan struktur dan fungsi kerja direktoru aplikasi django pada folder first_app :
+=========================================================================================
+#1. __init__.py = ini blank python untuk fungsinya sebagai special name dan bisa digunakan sebagai paket juga setiap project pasti ada init ini
+#2. admin.py = bisa untuk mendaftarkan model disini pada interface admin
+#3. apps.py = apps.py ini berfungsi untuk menempatkan konfigurasi aplikasi pada django python yang spesifik contoh dibawah ini mengimport AppConfig
+dan membuat object / kelas FirstAppConfig beserta parameter AppConfig
+#4. models.py = models.py ini berfungsi untuk store data aplikasi berhubungan dengan model database
+contoh :
+
+Membuat kelas model Dog.
+
+class Dog(models.Model):
+name = models.CharField(max_length = 45)
+breed = models.CharField(max_length = 45)
+created_at = models.DateTimeField(auto_now_add = True)
+updated_at = models.DateTimeField(auto_now_add = True)
+#5. test.py berfungsi untuk mengetes data yang dikirim ke database dari kode function atau method
+#6. views.py = views ini merupakan render atau menjadikan,mengubah tampilan html/template untuk membantu menghandle proses request dan respones 
+seperti get, put, patch, post dll
+
+15. membuat view mapping URL :
+
+- ke settings.py pada folder core yakni first_project
+- tambahkan folder aplikasi web django yang dibuat sebelumnya yakni first_app
+jadi begini :
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'first_app', # tambahkan folder aplikasi django ini
+]
+
+- jalankan python manage.py runserver jika berhasil akan ada page dengan isi konten it worked Congratulations on your first Django-powered page.
+bahwa sudah
+
+16. masuk ke first_app pada yang berada di first_project/first_app buka views.py 
+dan tambahkan from django.http import HttpResponse
+
+dari :
+
+from django.shortcuts import render
+
+jadi 
+
+from django.shortcuts import render
+from django.http import HttpResponse
+
+17. buat method :
+
+# buat method 
+def index(request):
+	return HttpResponse("Hello World");
+
+18. ke urls.py pada folder core django python di first_project\urls.py
+tambahkan / import from first_app import views # maksudnya kita import views.py pada aplikasi folder django web kita first_app 
+
+jadi dari :
+
+from django.conf.urls import url
+from django.contrib import admin
+
+menjadi :
+
+from django.conf.urls import url
+from django.contrib import admin
+from first_app import views #kita import views render
+
+lalu tambahkan pada urlpattern :
+url(r'^$',views.index)
+
+sehingga :
+
+urlpatterns = [
+	url(r'^$',views.index,name='index') #r'^$' ini merupakan fungsi regex utk replace yang bersimbol $ dan views merupakan file handler utk requestnya bawaan native python index disini adalah seperti function/method nya name='index' adalah nama function indexnya
+    url(r'^admin/', admin.site.urls),
+]
+
+
+kita coba python manage.py runserver
+
+19. kita akan buat URL MAPPINGS, untuk memudahkan mapping url yang dijalankan pada aplikasi first_app jadi nanti akan ada urls.py pada aplikasi first_app jadi nanti agar bisa dipanggil pada domain url://namadomain/first_app nya
+buka urls.py pada core python yakni pada folder first_project/urls.py dan tambahkan/ import :
+
+from django.conf.urls import include # ini adalah urls native dari django
+
+maka dari :
+
+from django.conf.urls import url
+from django.contrib import admin
+from first_app import views #maksudnya kita import views.py pada aplikasi folder django web kita first_app 
+
+menjadi :
+
+from django.conf.urls import url
+from django.contrib import admin
+from django.conf.urls import include #tambahkan ini utk mapping urls django
+from first_app import views #maksudnya kita import views.py pada aplikasi folder django web kita first_app 
+
+
+lalu kita tambahkan :
+
+maka dari :
+
+urlpatterns = [
+	url(r'^$',views.index, name='index'), #views merupakan file handler utk requestnya bawaan native python index disini adalah seperti function/method nya
+    url(r'^admin/', admin.site.urls),
+]
+
+menjadi :
+urlpatterns = [
+url(r'^$',views.index, name='index'), #views merupakan file handler utk requestnya bawaan native python index disini adalah seperti function/method nya
+url(r'^first_app',include('first_app.urls')), #r'^$firs_app fungsi regex utk replace dan include('first_app.urls') adalah utk mapping urls pada aplikasi first_app dan pada urls yang berada di folder aplikasi django firts_app/urls.py nanti akan ada file urls.py mapping berada di aplikasi first_app jadinya ada 2 di core dan di apps 
+url(r'^admin/', admin.site.urls),
+]
+
+19. buat file urls.py pada folder first_app jadi mappingnya first_app/urls.py
+lalu buka urls.py tsbt kita tambahkan :
+
+from django.conf.urls import url
+from first_app import views
+
+
+urlpatterns = [
+	url(r'^$',views.index, name='index')
+]
+
+20. Kita akan membuat Templates,
+
+- buat folder templates di base first_project jadi first_project/templates bkn di core apps ya tapi diroot base_dirnya
+- masuk ke settings.py pada core python django di first_project
+- tambahkan :
+
+print(os.path.join(BASE_DIR,"templates")) 
+
+dari : 
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+menjadi :
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+print(os.path.join(BASE_DIR,"templates"))
+
+coba jalankan python settings.py pada core python first_project maka akan dapat output direktori templates :
+H:\laragon\www\fullstackdjangodeveloper\16_djangolevelone\My_Django_Stuff\first_project\templates
+
+jika benar direktori templates maka kita ubah dari :
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+print(os.path.join(BASE_DIR,"templates"))
+
+menjadi :
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+TEMPLATE_DIR = os.path.join(BASE_DIR,"templates") # ini digunakan untuk setingan templates pada setings.py
+
+21. pada settings.py tambahkan TEMPLATE_DIR pada :
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+
+sehingga menjadi :
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [TEMPLATE_DIR,],
+
+22. kita coba buat file index.html pada folder templates isikan :
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>First App</title>
+	<link rel="stylesheet" href="">
+</head>
+<body>
+	<h1>ini index.html</h1>
+	{{insert_me}}
+</body>
+</html>
+
+23. buka views.py pada aplikasi first_app folder:
+
+ubah :
+
+
+def index(request):
+    return HttpResponse("Hello World")
+
+
+menjadi :
+
+def index(request):
+    my_dict = {'insert_me': "Hello ini dari views.py"}
+    return render(request, 'index.html', context=my_dict) # request karena sifatnya req, index.html itu berada di folder tmeplate, context ini mempasing data dari variable my_dict nanti di tampilkan pada index.html yakni{insert_me}
+
+lalu coba restart jalankan kembali python manage.py runserver
+
+24.STATIC FILES, jadi static files ini yang nantinya bisa diakses seperti gambar secara langsung ur:/domain/static/gambar.jpg
+buat folder static pada root first_project jadi first_project/static lalu kita buat folder images di folder static
+
+25. buka settings.py pada core python pada first_project/settings.py
+STATIC_DIR = os.path.join(BASE_DIR,"static") #jadi kita menampah path untuk static folder tadi
+
+
+dari :
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+menjadi :
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
+
+26. masih pada settings.py tambahkan :
+
+STATICFILES_DIR = [STATIC_DIR,]
+
+
+sehingga dari : 
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.11/howto/static-files/
+
+STATIC_URL = '/static/'
+
+menjadi :
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.11/howto/static-files/
+
+STATIC_URL = '/static/'
+STATICFILES_DIR = [STATIC_DIR,]
+
+27. coba kita tambahkan gambar pada folder static/images contoh djangoguitar.jpg

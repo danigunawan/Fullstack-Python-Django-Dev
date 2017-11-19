@@ -1,0 +1,92 @@
+1. conda info --envs
+pilih list env python versi misal : myDjangoenv
+2. activate myDjangoenv
+3. django-admin startproject first_project
+4. cd first_project
+5. python manage.py startapp first_app
+6. buka views.py pada first_app :
+
+isi :
+
+buat method/define/atau controller nya
+# Create your views here.
+
+
+def index(request):
+    my_dict = {'insert_content': "HELLO IM FROM FIRSTAPP!"}
+    return render(request, 'first_app/index.html', context=my_dict)
+
+7. buat urls.py di first_app\urls.py :
+lalu isi :
+
+from django.conf.urls import url
+from first_app import views
+
+
+urlpatterns = [
+    url(r'^$', views.index, name='index')
+]
+
+
+
+8. buka urls.py pada first_project\urls.py 
+tambahkan fungsi include pada :
+
+from django.conf.urls import url
+
+sehingga : 
+from django.conf.urls import url,include
+
+9. masih pada first_project\urls.py
+
+kita tambah kan fungsi mapping url:
+
+dari :
+
+urlpatterns = [
+    url(r'^admin/', admin.site.urls),
+]
+
+menjadi :
+
+urlpatterns = [
+    url(r'^$', views.index, name='index')
+    url(r'^admin/', admin.site.urls),
+    url(r'^first_app/', include('first_app.urls'))
+]
+
+
+10. buat folder templates di first_project/templates bukan di first_project/first_project/templates
+11. buat folder first_app di templates first_project/templates/first_app
+12. buat index.html di first_project/templates/first_app/index.html
+lalu isi dengan :
+{{ insert_content }}
+pada html:
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<link rel="stylesheet" href="">
+</head>
+<body>
+	<h1>hello this is a test page!</h1>
+	<h2>{{ insert_content }}</h2>
+</body>
+</html>
+13. pada first_project/first_project/settings.py 
+tambahkan :
+TEMPLATE_DIR = os.path.join(BASE_DIR,'templates')
+
+masih pada settings.py :
+
+pada fungsi array tempaltes tambahkan TEMPLATE_DIR pada:
+
+'DIRS': [],
+menjadi :
+
+DIRS': [TEMPLATE_DIR,],
+
+

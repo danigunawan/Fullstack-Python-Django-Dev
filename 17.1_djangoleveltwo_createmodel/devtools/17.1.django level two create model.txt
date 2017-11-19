@@ -1,0 +1,108 @@
+1. buka project sebelumnya yang django level one 
+2. buat model buka first_project/first_app/models.py
+
+buat model untuk migrasi :
+
+
+dari :
+
+from django.db import models
+
+# Create your models here.
+
+
+menjadi :
+
+from django.db import models
+
+# Create your models here.
+
+class Topic(models.Model):
+    top_name = models.CharField(max_length=264, unique=True)
+
+    def __str__(self):
+        return self.top_name
+
+
+class Webpage(models.Model):
+    topic = models.ForeignKey(Topic)
+    name = models.CharField(max_length=264, unique=True)
+    url = models.URLField(unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class AccessRecord(models.Model):
+    name = models.ForeignKey(Webpage)
+    date = models.DateField()
+
+    def __str__(self):
+        return str(self.date)
+3. python manage.py makemigrations first_app
+4. python manage.py migrate
+5. cek database :
+
+python manage.py shell
+
+# kita coba insert ke model Topic untuk field top_name :
+
+from first_app.models import Topic
+
+kita coba cek :
+print(Topic.objects.all())
+<QuerySet []>
+
+# ternyata masih kosong datanya
+
+
+sekarang insert,
+
+t = Topic(top_name="Social Network")
+t.save()
+
+print(Topic.objects.all())
+<QuerySet [<Topic: Social Network>]>
+
+# sudah ada datanya pada model Topic
+
+6. keluar dari shell :
+quit()
+
+7. Create Model Admin untuk superuser:
+ 
+# buka first_app/admin.py 
+lalu tambah :
+
+dari : 
+from django.contrib import admin
+
+# Register your models here.
+# bisa untuk mendaftarkan model disini pada interface admin
+
+menjadi :
+
+
+from django.contrib import admin
+from first_app.models import AccessRecord, Topic, Webpage
+
+# Register your models here.
+# bisa untuk mendaftarkan model disini pada interface admin
+
+admin.site.register(AccessRecord)
+admin.site.register(Topic)
+admin.site.register(Webpage)
+
+8. buat super user nya ketik :
+
+python manage.py createsuperuser
+
+lalu isi,
+
+username : dhanexlab
+Email Address : dhanexlab@gmail.com
+passowrd : dhan29912120
+
+9. coba buka : python manage.py runserver
+10. http://127.0.0.1:8000/admin masuk dengan akun yg tadi dibuat
+akan ada hasil migrate tadi first_app dan management admin akses

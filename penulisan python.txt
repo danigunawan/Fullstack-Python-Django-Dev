@@ -1,0 +1,4 @@
+https://stackoverflow.com/questions/14773271/how-to-fix-convert-space-indentation-in-sublime-text
+https://www.petanikode.com/python-sintaks/
+
+https://stackoverflow.com/questions/8634700/python-indentationerror-unexpected-indent

@@ -1,0 +1,206 @@
+#### 18.0
+
+Bekerja dengan dasar form django
+==================
+
+1. django-admin startproject basicforms
+2. cd basicforms
+3. django-admin startapp basicapp
+4. buat index.html dan form_page.html template untuk render form sample nantinya:
+  -18_djangolevelthree_form_basic\basicforms\templates\basicapp\index.html
+  -18_djangolevelthree_form_basic\basicforms\templates\basicapp\form_page.html
+5. isi index.html :
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<link rel="stylesheet" href="">
+</head>
+<body>
+	<h1>Welcome to home page</h1>
+</body>
+</html>
+
+6. isi form_page.html :
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Forms</title>
+	<link rel="stylesheet" href="">
+</head>
+<body>
+	
+</body>
+</html>
+
+7. Setting template di basicforms/settings.py:
+tambahkan dan ubah menjadi :
+
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
+'DIRS': [TEMPLATE_DIR, ],
+
+8. buat forms.py di \18_djangolevelthree_form_basic\basicforms\basicapp\forms.py
+isikan : 
+
+from django import forms
+
+
+class FormName(forms.Form):
+    name = forms.Charfield()
+    email = forms.EmailField()
+    text = forms.CharField(widget=forms.Textarea)
+
+
+9. buka basicapp/views.py
+ubah menjadi :
+
+from django.shortcuts import render
+from . import forms
+
+# Create your views here.
+
+
+def index(request):
+    return render(request, 'basicapp/index.html')
+
+
+def form_name_view(request):
+    form = forms.FormName()
+    return render(request, 'basicapp/form_page.html', {'form': form})
+
+10.  buka mapping url di basicforms/basicforms/urls.py
+ubah dan tambahkan menjadi :
+
+tambahkan :
+from basicapp import views
+
+sehingga menjadi :
+
+from django.conf.urls import url
+from django.contrib import admin
+from basicapp import views
+urlpatterns = [
+    url(r'^$', views.index, name='index'),
+    url(r'^admin/', admin.site.urls),
+    url(r'^formpage/', views.form_name_view, name='form_name')
+]
+
+11. lalu pada templates/basicapp/form_page.html tambahkan menjadi :
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Forms</title>
+	<link rel="stylesheet" href="">
+</head>
+<body>
+	<h1>Fill out the form !</h1>
+	<div class="container">
+		<form method="POST">
+			{{form.as_p}}
+			{% csrf_token %}
+			<input type="submit" class="btn btn-primary" value="Submit">
+		</form>
+	</div>
+	
+</body>
+</html>
+
+12.buka views.py di 18_djangolevelthree_form_basic\basicforms\basicapp\views.py :
+lalu tambah dan ubah menjadi :
+
+from django.shortcuts import render
+from . import forms # ini untuk import class forms
+
+# Create your views here.
+
+
+def index(request):
+    return render(request, 'basicapp/index.html')
+
+
+def form_name_view(request):
+    form = forms.FormName()
+
+    if request.method == 'POST':
+        form = forms.FormName(request.POST)
+
+        if form.is_valid():
+            # DO SOMETHING CODE
+            print("VALIDATION SUCCESS!")
+            print("NAME: "+form.cleaned_data['name'])
+            print("EMAIL: "+form.cleaned_data['email'])
+            print("TEXT: "+form.cleaned_data['text'])
+
+    return render(request, 'basicapp/form_page.html', {'form': form})
+
+13. coba jalankan python manage.py runserver
+terlihat diconsole akan ada logs hasil dari input form:
+VALIDATION SUCCESS!
+NAME: dadab
+EMAIL: dadan@gmail.com
+TEXT: testes
+[05/Nov/2017 22:21:15] "POST /formpage/ HTTP/1.1" 200 920
+
+
+####### 18.1 FORM VALIDATION ########
+1. masih pada project basic form 18.0
+2. buka forms.py di basicapp
+tambahkan :
+
+    botcatcher = forms.CharField(required=False,
+                                widget=forms.HiddenInput)
+
+sehingga :
+
+
+from django import forms
+
+
+class FormName(forms.Form):
+    name = forms.CharField()
+    email = forms.EmailField()
+    text = forms.CharField(widget=forms.Textarea)
+    botcatcher = forms.CharField(required=False,
+                                 widget=forms.HiddenInput)
+
+
+3. lalu coba refresh 127.0.0.1/formpage
+inspection ke form maka akan ada input tipe hidden :
+ini adalah middleware csrf :
+<input type="hidden" name="csrfmiddlewaretoken" value="AuOwgD11i3Mq4Fz9eRYBrWKJnzUQwJPrJjZ2B7gOMiunZpo5H8IQ56pXLBrqE2M8">
+dan ini adalah botcatcher untuk form validation:
+<input type="hidden" name="botcatcher" id="id_botcatcher">
+
+4.pada form.py coba ubah untuk email validation :
+from django import forms
+from django.core import validators
+
+
+class FormName(forms.Form):
+    name = forms.CharField()
+    email = forms.EmailField()
+    verify_email = forms.EmailField(label='Enter your email again')
+    text = forms.CharField(widget=forms.Textarea)
+
+    def clean(self):
+    	all_clean_data = super().clean()
+    	email = all_clean_data['email']
+    	vmail = all_clean_data['verify_email']
+
+    	if email != vmail:
+    		raise forms.ValidationError("MAKE SURE EMAILS MATCH !")
+    # def clean_botcatcher(self):
+    #     botcatcher = self.cleaned_data['botcatcher']
+    #     if len(botcatcher) > 0:
+    #         raise forms.ValidationError("GOTCHA BOT!")
+
+    #     return botcatcher
+5. runserver kembali

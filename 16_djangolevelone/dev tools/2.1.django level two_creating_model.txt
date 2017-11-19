@@ -1,0 +1,62 @@
+CREATING MODELS
+==================
+Ket : Pakai project di levelone 16_djangolevelone
+
+1. pip install faker
+2. referensi faker : https://faker.readthedocs.io/en/master/
+3. 17.1_djangoleveltwo_createmodel\My_Django_Stuff\first_project\populate_first_app.py
+lalu isi :
+
+import os
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'first_project.settings')
+
+import django
+django.setup()
+
+
+# FAKER POP SCRIPT
+import random
+from first_app.models import AccessRecord, Webpage, Topic
+from faker import Faker
+
+
+fakegen = Faker()
+topics = ['Search', 'Social', 'Marketplace', 'News', 'Games']
+
+
+def add_topic():
+    t = Topic.objects.get_or_create(top_name=random.choice(topics))[0]
+    t.save()
+    return t
+
+
+def populate(N=5):
+
+    for entry in range(N):
+
+        # get the topic for the entry
+        top = add_topic()
+
+        # Create the fake data for that entry
+        fake_url = fakegen.url()
+        fake_date = fakegen.date()
+        fake_name = fakegen.company()
+
+        # Create the new webpage entry
+        webpg = Webpage.objects.get_or_create(
+            topic=top, url=fake_url, name=fake_name)[0]
+
+        # Create a fake access record for that webpage
+        acc_rec = AccessRecord.objects.get_or_create(
+            name=webpg, date=fake_date)[0]
+
+if __name__ == '__main__':
+    print("Populating script!")
+    populate(20)
+    print("populating complete!")
+
+4. cd ke 17.2_djangoleveltwo_populationscript\My_Django_Stuff\first_project
+
+lalu run : 
+
+python populate_first_app.py

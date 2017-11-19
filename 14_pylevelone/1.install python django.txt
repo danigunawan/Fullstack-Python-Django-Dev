@@ -1,0 +1,9 @@
+TOOLS & IDE
+============
+1.Anaconda /miniconda https://conda.io/miniconda.html / https://www.anaconda.com/download/
+2. IDE atom.io dengan packages terminal (platformio-ide-terminal, terminal-plus, autocomplete-python, language-python, atom-django)
+3. seting platformio-ide-terminal
+Shell Override : C:\Windows\system32\cmd.exe
+4.
+
+
