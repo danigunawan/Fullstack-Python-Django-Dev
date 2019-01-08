@@ -6,6 +6,8 @@ environment ini berguna untuk pemakaian resource python versi berapa yang akan d
 
 conda create --name myDjangoEnv django //django foldernya beserta kita install environment nya baik baik spec python dsb yang terbaru/ latest
 
+conda create --name myDjangoEnv django python =3.5 //install django
+
 jika kita ingin spesifik install versinya :
 
 conda create --name myDjangoEnv python=3.5//spesifik install package environmentnya python v 3.5
