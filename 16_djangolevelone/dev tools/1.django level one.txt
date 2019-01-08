@@ -18,11 +18,12 @@ yang sudah kita buat tadi environmentnya adalah myDjangoEnv :
 
 maka untuk aktivasi environmentnya :
 
-activate myDjangoEnv
+activate myDjangoEnv atau conda activate myDjangoEnv atau source activate myDjangoEnv
+
 
 untuk deaktivasi :
 
-deactivate myDjangoEnv 
+deactivate myDjangoEnv atau conda deactivate myDjangoEnv atau source deactivate myDjangoEnv
 
 4. conda info --envs # untuk melihat list environment yang bisa digunakan spesifikasinya
 dengan info --envs kita bisa memilih environment yang kita install packagenya :
